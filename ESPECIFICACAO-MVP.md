@@ -1,6 +1,6 @@
 # ESPECIFICAÇÃO DO MVP 1 — Elo Alimentar
 
-Versão 1.0 · 28/09/2026 · Equipe Elo Alimentar (IFPI Campus Teresina Central, ADS IV)
+Versão 1.1 · 06/10/2026 · Equipe Elo Alimentar (IFPI Campus Teresina Central, ADS IV)
 
 Este documento é o **contrato funcional** do MVP 1. Nenhuma regra aqui pode ser alterada por agente de código sem aprovação da equipe (ver [`AGENTS.md`](AGENTS.md)).
 
@@ -43,6 +43,7 @@ Este documento é o **contrato funcional** do MVP 1. Nenhuma regra aqui pode ser
 2. Cada lote com validade diferente é um produto distinto, mesmo com o mesmo nome.
 3. O comerciante pode editar `preco` e `quantidade` depois do cadastro; `data_validade` só pode ser corrigida para uma data válida pela regra 1.
 4. Um produto só é visível para o estabelecimento que o cadastrou.
+5. O comerciante pode excluir um produto cadastrado por engano, desde que ele não tenha vendas registradas. Com vendas, a exclusão é bloqueada e aparece o aviso: "Produto com vendas registradas não pode ser excluído." *(incluída na v1.1, aprovada pela equipe em 06/10/2026)*
 
 **Saída observável**
 
@@ -251,6 +252,7 @@ Este documento é o **contrato funcional** do MVP 1. Nenhuma regra aqui pode ser
 |---|---|---|
 | Front-end | Nuxt 4 (Vue 3) + PWA | mobile-first, instalável no celular do caixa |
 | Banco e autenticação | Supabase (PostgreSQL, Auth, Row Level Security) | persistência real e isolamento dos dados de cada estabelecimento |
+| API REST | Node.js + Express (pasta `backend/`) | camada entre o front-end e o Supabase, com URIs, verbos e status codes REST (Aula 10) |
 | Regras transacionais | funções SQL no PostgreSQL (RPC) | baixa de estoque atômica nos RF-02 e RF-04 |
 | Hospedagem | Vercel + Supabase Cloud (planos gratuitos) | custo zero no semestre |
 | Testes | Vitest (regras de negócio) + roteiros manuais BDD (telas) | cobrir sucesso e falha de cada RF |

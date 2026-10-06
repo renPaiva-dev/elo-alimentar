@@ -73,3 +73,11 @@ O agente deve **parar e perguntar à equipe** antes de continuar quando:
 **Linguagem**
 
 - Textos da interface não podem expor ou estigmatizar quem recebe doações (evitar termos como "carente" ou "pobre"; usar "entidade" e "pessoas atendidas").
+
+## Regra 7 — Contrato da API REST (backend Express)
+- A API fica em `backend/`, em camadas: config → repositories → controllers → routes → server. Só o repository fala com o Supabase.
+- Recursos no plural, com substantivos (`/api/v1/produtos`, `/api/v1/vendas`). Proibido GET para mutar estado.
+- Criação responde 201 com header `Location`; exclusão responde 204 sem corpo; recurso inexistente responde 404.
+- Payload inválido responde 400 com `{ "erro": "..." }`. Proibido responder 200 com erro no corpo e proibido 500 para corpo vazio.
+- Só existem os endpoints do contrato na Issue #01. Endpoint novo exige aprovação (Regra 5).
+- Operações que mexem em estoque (RF-02, RF-04) usam RPC transacional no banco, nunca duas chamadas separadas.

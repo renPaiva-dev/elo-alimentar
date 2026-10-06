@@ -68,6 +68,7 @@ Estas ideias **não** serão implementadas na versão 1, mesmo que pareçam fác
 ## 5. Stack tecnológica inicial
 
 - **Front-end:** Nuxt 4 (Vue 3), mobile-first, instalável como PWA.
+- **API REST:** Node.js + Express na pasta `backend/` (rotas → controllers → repositories → Supabase).
 - **Back-end e banco:** Supabase (PostgreSQL + Auth + Row Level Security).
 - **Hospedagem:** Vercel (front-end) e Supabase Cloud (plano gratuito).
 - **Testes:** Vitest para regras de negócio e roteiros manuais BDD para as telas.
@@ -80,6 +81,8 @@ cd elo-alimentar
 cp .env.example .env.local   # preencha com as chaves do seu projeto Supabase
 npm install
 npm run smoke   # testa o cadastro de produto (RF-01) no Supabase
+npm test        # testes de contrato da API (Vitest)
+npm run api     # sobe a API em http://localhost:3000/api/v1
 ```
 
 ## 7. Equipe

@@ -4,6 +4,10 @@
 -- (Registrar venda) conforme ESPECIFICACAO-MVP.md.
 -- Script idempotente: pode ser executado mais de uma vez no SQL Editor.
 -- =====================================================================
+-- ATENÇÃO (06/10/2026): o banco em nuvem NÃO foi criado com este script, e sim
+-- com uma versão gerada à parte (constraints chk_*, itens_venda.subtotal_centavos).
+-- A migração 003_alinhar_banco_a_spec.sql corrige as divergências. Este arquivo
+-- fica como registro da Aula 09; para um banco novo, rode 001, 002 e 003 em ordem.
 
 -- ---------------------------------------------------------------------
 -- 1. TABELA PRINCIPAL: produtos (RF-01)
