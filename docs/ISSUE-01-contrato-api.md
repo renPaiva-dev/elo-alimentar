@@ -7,7 +7,9 @@
 - [x] **RF-01** (produtos) e **RF-02** (vendas) implementados e testados: 22 testes de contrato (Vitest) + 17 cenários reais contra o Supabase;
 - [ ] RF-03 a RF-05: contrato proposto abaixo, implementação pendente.
 
-**Base:** `http://localhost:3000/api/v1` (deploy pendente) · **Formato:** JSON (`Content-Type: application/json`) · **Erros:** `{ "erro": "mensagem" }`
+**Banco em nuvem (Supabase):** https://sxfafipniczshptyhjro.supabase.co · **Código:** https://github.com/renPaiva-dev/elo-alimentar/pull/1
+
+**Base da API:** `http://localhost:3000/api/v1` (a API Express roda local e persiste no Supabase acima) · **Formato:** JSON (`Content-Type: application/json`) · **Erros:** `{ "erro": "mensagem" }`
 
 #### Contrato
 
@@ -104,6 +106,6 @@ Tabela completa em `docs/testes/CHECKPOINT-AULA-10.md`.
 1. **Sem autenticação ainda (Aula 11):** hoje o RLS tem políticas públicas transitórias. Com o JWT (`Authorization: Bearer <token>`, stateless), entram os erros 401/403 e o isolamento por estabelecimento que a spec exige.
 2. **Arredondamento no RF-02:** hoje o arredondamento é feito por item (meio para cima). A spec não diz se deve ser por item ou na soma, e a equipe ainda vai decidir.
 3. **DELETE de produto:** incluído na spec v1.1 (RF-01, regra 5) para atender ao contrato REST; só vale para produto sem vendas.
-4. **Deploy:** a API ainda roda localmente; a publicação (Render/Vercel) é o próximo passo.
+4. **Deploy da API:** o banco já está na nuvem (Supabase); a API Express ainda roda localmente, e a publicação (Render/Vercel) é o próximo passo.
 
-**Commit:** <cole aqui o hash>
+**Commit:** `1850228` · **PR:** https://github.com/renPaiva-dev/elo-alimentar/pull/1
