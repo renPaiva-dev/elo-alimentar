@@ -4,9 +4,16 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "smoke": "node --env-file=.env.local src/services/test-insert.js"
+    "smoke": "node --env-file=.env.local src/services/test-insert.js",
+    "api": "node --env-file=.env.local backend/src/server.js",
+    "test": "vitest run",
+    "checkpoint": "bash backend/scripts/checkpoint.sh"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.45.0"
+    "@supabase/supabase-js": "^2.45.0",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "vitest": "^5.0.3"
   }
 }
