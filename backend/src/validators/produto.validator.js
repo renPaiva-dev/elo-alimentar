@@ -2,15 +2,10 @@
 // O cadastro reaproveita as regras do cliente (src/services/validarProduto.js);
 // o banco repete as mesmas regras (Princípio do Oráculo).
 import { validarProduto, hojeFortaleza } from '../../../src/services/validarProduto.js';
+import { somarDias } from '../utils/validade.js';
 
 const MSG_VENCIDO = 'Produto vencido não pode ser cadastrado para venda nem para doação.';
 const CAMPOS_EDITAVEIS = ['preco_centavos', 'quantidade', 'data_validade'];
-
-function somarDias(isoData, dias) {
-  const d = new Date(`${isoData}T12:00:00Z`);
-  d.setUTCDate(d.getUTCDate() + dias);
-  return d.toISOString().slice(0, 10);
-}
 
 function ehObjeto(corpo) {
   return corpo !== null && typeof corpo === 'object' && !Array.isArray(corpo);

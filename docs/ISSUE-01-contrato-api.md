@@ -5,30 +5,32 @@
 - [x] `.env.local` fora do Git (`.gitignore`) e `.env.example` versionado só com placeholders;
 - [x] Regras de REST no `AGENTS.md` (Regra 7): URIs no plural, 201 + `Location`, 204 no DELETE, 400 com `{ "erro" }`, nunca GET para mutação;
 - [x] **RF-01** (produtos) e **RF-02** (vendas) implementados e testados: 22 testes de contrato (Vitest) + 17 cenários reais contra o Supabase;
-- [ ] RF-03 a RF-05: contrato proposto abaixo, implementação pendente.
+- [x] Contrato completo do MVP definido: RF-01 e RF-02 entregues nesta aula; RF-03 a RF-05 com rotas já desenhadas, seguindo a ordem do `AGENTS.md` (um RF por vez).
 
-**Base:** `http://localhost:3000/api/v1` (deploy pendente) · **Formato:** JSON (`Content-Type: application/json`) · **Erros:** `{ "erro": "mensagem" }`
+**Banco em nuvem (Supabase):** https://sxfafipniczshptyhjro.supabase.co · **Código:** https://github.com/renPaiva-dev/elo-alimentar/pull/1
+
+**Base da API:** `http://localhost:3000/api/v1` (a API Express roda local e persiste no Supabase acima) · **Formato:** JSON (`Content-Type: application/json`) · **Erros:** `{ "erro": "mensagem" }`
 
 #### Contrato
 
-| RF | Método e URI | Sucesso | Erros | Situação |
+| RF | Método e URI | Sucesso | Erros | Entrega |
 |---|---|---|---|---|
-| 01 | `POST /produtos` | **201** + `Location: /api/v1/produtos/{id}` | 400 | ✅ implementado e testado |
-| 01 | `GET /produtos` (ordem: validade, nome) | **200** | — | ✅ |
-| 01 | `GET /produtos/{id}` | **200** | 404 | ✅ |
-| 01 | `PATCH /produtos/{id}` (só `preco_centavos`, `quantidade`, `data_validade`) | **200** | 400, 404 | ✅ |
-| 01 | `DELETE /produtos/{id}` | **204** sem corpo | 404, 409 (produto com vendas) | ✅ |
-| 02 | `POST /vendas` | **201** + `Location: /api/v1/vendas/{id}` | 400 | ✅ |
-| 02 | `GET /vendas/{id}` | **200** | 404 | ✅ |
-| 03 | `GET /produtos?vence_em_ate=3` (lista "Vencem em até 3 dias") | 200 | 400 | ⏳ proposto (só leitura) |
-| 03 | `GET /produtos?vencidos=true` ("Vencidos — retirar da venda") | 200 | 400 | ⏳ proposto (só leitura) |
-| 04 | `POST /doacoes` | 201 + `Location` | 400, 409 (limite de 20 ativos) | ⏳ proposto |
-| 04 | `GET /doacoes` ("Minhas doações") | 200 | — | ⏳ proposto |
-| 04 | `PATCH /doacoes/{id}` `{ "status": "retirado" \| "cancelado" }` | 200 | 400, 404, 409 | ⏳ proposto |
-| 05 | `GET /doacoes?status=ativo&bairro={bairro}` (mural) | 200 | 400 | ⏳ proposto |
-| 05 | `POST /contatos` `{ "doacao_id" }` | 201 + `Location` | 400, 404 | ⏳ proposto |
+| 01 | `POST /produtos` | **201** + `Location: /api/v1/produtos/{id}` | 400 | ✅ Aula 10 |
+| 01 | `GET /produtos` (ordem: validade, nome) | **200** | — | ✅ Aula 10 |
+| 01 | `GET /produtos/{id}` | **200** | 404 | ✅ Aula 10 |
+| 01 | `PATCH /produtos/{id}` (só `preco_centavos`, `quantidade`, `data_validade`) | **200** | 400, 404 | ✅ Aula 10 |
+| 01 | `DELETE /produtos/{id}` | **204** sem corpo | 404, 409 (produto com vendas) | ✅ Aula 10 |
+| 02 | `POST /vendas` | **201** + `Location: /api/v1/vendas/{id}` | 400 | ✅ Aula 10 |
+| 02 | `GET /vendas/{id}` | **200** | 404 | ✅ Aula 10 |
+| 03 | `GET /produtos?vence_em_ate=3` (lista "Vencem em até 3 dias") | 200 | 400 | 📅 próximo RF (só leitura) |
+| 03 | `GET /produtos?vencidos=true` ("Vencidos — retirar da venda") | 200 | 400 | 📅 próximo RF (só leitura) |
+| 04 | `POST /doacoes` | 201 + `Location` | 400, 409 (limite de 20 ativos) | 📅 planejado |
+| 04 | `GET /doacoes` ("Minhas doações") | 200 | — | 📅 planejado |
+| 04 | `PATCH /doacoes/{id}` `{ "status": "retirado" \| "cancelado" }` | 200 | 400, 404, 409 | 📅 planejado |
+| 05 | `GET /doacoes?status=ativo&bairro={bairro}` (mural) | 200 | 400 | 📅 planejado |
+| 05 | `POST /contatos` `{ "doacao_id" }` | 201 + `Location` | 400, 404 | 📅 planejado |
 
-As tabelas `estabelecimentos`, `doacoes`, `entidades` e `contatos` ainda não existem, por isso o RF-04 e o RF-05 estão só no contrato. A ordem de implementação é RF-03 → RF-04 → RF-05 (um RF por vez).
+**Roadmap:** RF-03 (consulta de validade, só leitura) → RF-04 (doações, RF-CORE) → RF-05 (mural e contatos). O RF-04 e o RF-05 entram junto com as tabelas `estabelecimentos`, `doacoes`, `entidades` e `contatos` e com a autenticação da Aula 11.
 
 **RF-05 e LGPD:** a localização da entidade **nunca** vai para a API. O mural recebe os anúncios com as coordenadas dos estabelecimentos e o navegador calcula a distância (Haversine) e o filtro de 5 km.
 
@@ -99,11 +101,11 @@ DELETE /api/v1/produtos/{id}   →  HTTP/1.1 409 Conflict     { "erro": "Produto
 
 Tabela completa em `docs/testes/CHECKPOINT-AULA-10.md`.
 
-#### Limitações declaradas
+#### Próximos passos e limitações declaradas
 
 1. **Sem autenticação ainda (Aula 11):** hoje o RLS tem políticas públicas transitórias. Com o JWT (`Authorization: Bearer <token>`, stateless), entram os erros 401/403 e o isolamento por estabelecimento que a spec exige.
 2. **Arredondamento no RF-02:** hoje o arredondamento é feito por item (meio para cima). A spec não diz se deve ser por item ou na soma, e a equipe ainda vai decidir.
 3. **DELETE de produto:** incluído na spec v1.1 (RF-01, regra 5) para atender ao contrato REST; só vale para produto sem vendas.
-4. **Deploy:** a API ainda roda localmente; a publicação (Render/Vercel) é o próximo passo.
+4. **Deploy da API:** o banco já está na nuvem (Supabase); a API Express ainda roda localmente, e a publicação (Render/Vercel) é o próximo passo.
 
-**Commit:** <cole aqui o hash>
+**Commit:** `1850228` · **PR:** https://github.com/renPaiva-dev/elo-alimentar/pull/1

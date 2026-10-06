@@ -50,6 +50,19 @@ req DELETE "/produtos/$P2";                    reg "RF-01 DELETE /produtos/:id" 
 req DELETE "/produtos/$P2";                    reg "RF-01 DELETE de novo (idempotente)" 404 "$(echo "$BODY" | jq -r .erro)"
 req DELETE "/produtos/$P1";                    reg "RF-01 DELETE produto com venda" 409 "$(echo "$BODY" | jq -r .erro)"
 
+# RF-03: A vence amanhã, B em 3 dias, C em 5 dias (fora da janela).
+prod() { echo "{\"nome\":\"$1\",\"unidade\":\"un\",\"quantidade\":5,\"preco_centavos\":100,\"data_validade\":\"$(D "$2")\"}"; }
+req POST /produtos "$(prod 'RF03 Produto A' +1)"; A=$(echo "$BODY" | jq -r .id)
+req POST /produtos "$(prod 'RF03 Produto B' +3)"; B=$(echo "$BODY" | jq -r .id)
+req POST /produtos "$(prod 'RF03 Produto C' +5)"; C=$(echo "$BODY" | jq -r .id)
+req GET "/produtos?vence_em_ate=3"
+SEL=$(echo "$BODY" | jq -c --arg a "$A" --arg b "$B" --arg c "$C" '[.[] | select(.id == $a or .id == $b or .id == $c) | .rotulo_validade]')
+[ "$SEL" = '["vence amanhã","vence em 3 dias"]' ] || ST="$ST (lista errada)"
+reg "RF-03 GET /produtos?vence_em_ate=3 (A, B, C)" 200 "A, B, C → $SEL (esperado só A e B, nessa ordem)"
+req GET "/produtos?vence_em_ate=7";            reg "RF-03 janela diferente de 3" 400 "$(echo "$BODY" | jq -r .erro)"
+req GET "/produtos?vencidos=true";             reg "RF-03 GET /produtos?vencidos=true" 200 "$(echo "$BODY" | jq length) vencidos com estoque"
+for id in "$A" "$B" "$C"; do req DELETE "/produtos/$id"; done
+
 echo "Data de referência (America/Fortaleza): $HOJE · API: $BASE"
 echo
 echo "| Cenário | Esperado | Obtido | Detalhe | OK |"
