@@ -18,6 +18,33 @@ export const produtosRepository = {
     return data || [];
   },
 
+  /** RF-03, regra 1: quantidade > 0 e validade entre hoje e o limite, por validade e nome. */
+  async findVencendo(hoje, limite) {
+    const { data, error } = await supabase
+      .from('produtos')
+      .select('*')
+      .gt('quantidade', 0)
+      .gte('data_validade', hoje)
+      .lte('data_validade', limite)
+      .order('data_validade', { ascending: true })
+      .order('nome', { ascending: true });
+    if (error) throw error;
+    return data || [];
+  },
+
+  /** RF-03, regra 3: vencidos com quantidade > 0 ("Vencidos — retirar da venda"). */
+  async findVencidos(hoje) {
+    const { data, error } = await supabase
+      .from('produtos')
+      .select('*')
+      .gt('quantidade', 0)
+      .lt('data_validade', hoje)
+      .order('data_validade', { ascending: true })
+      .order('nome', { ascending: true });
+    if (error) throw error;
+    return data || [];
+  },
+
   async findById(id) {
     const { data, error } = await supabase.from('produtos').select('*').eq('id', id).maybeSingle();
     if (error) throw error;
