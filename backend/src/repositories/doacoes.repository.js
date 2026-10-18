@@ -2,8 +2,9 @@
 // passam por funções transacionais no banco (AGENTS.md, Regra 7): uma chamada, tudo ou nada.
 import { db } from '../config/supabaseClient.js';
 
+// contatos(count): quantas entidades tocaram em "Conversar no WhatsApp" (RF-05, regra 6).
 const CAMPOS = 'id, created_at, produto_id, quantidade, prazo_retirada, observacao, status, retirado_em, '
-  + 'produto:produtos (nome, unidade, data_validade)';
+  + 'produto:produtos (nome, unidade, data_validade), contatos (count)';
 
 export const doacoesRepository = {
   async publicar({ produto_id, quantidade, prazo_retirada, observacao }) {
@@ -32,6 +33,13 @@ export const doacoesRepository = {
     const { data, error } = await db().from('doacoes').select(CAMPOS).eq('id', id).maybeSingle();
     if (error) throw error;
     return data;
+  },
+
+  /** RF-05: anúncios ativos no prazo, com os dados do estabelecimento. Só entidades (o banco confere). */
+  async findMural(bairro) {
+    const { data, error } = await db().rpc('listar_mural', { p_bairro: bairro ?? null });
+    if (error) throw error;
+    return data || [];
   },
 
   async alterarStatus(id, status) {
