@@ -13,6 +13,7 @@ A `ESPECIFICACAO-MVP.md` **não foi alterada** (AGENTS.md, Regra 1). Abaixo est�
 | 7 | Produto com doação registrada | Não pode ser excluído (409), para não perder o histórico da métrica. | FK em `doacoes` |
 | 8 | Dados antigos da Aula 10 | Ficam sem dono e somem das telas após a `004` (ver `COLOCAR-NO-AR.md`). | `004` |
 | 9 | Front-end e API no mesmo deploy | O Nuxt serve a API Express em `/api/v1` (ponte em `server/routes/api/v1/[...].js`). `npm run api` continua funcionando sozinho. | `nuxt.config.js` |
+| 11 | Endereço e edição da loja (spec v1.2, **aprovado** em 18/10/2026) | Tela "Meu estabelecimento" (nome, bairro, endereço, WhatsApp e localização pelo GPS da loja), local de retirada opcional por doação e "Buscar em" + "Ver no mapa" no mural. Autocadastro continua fora. | `007`, `estabelecimento.vue` |
 | 10 | Quem vê os contatos | O estabelecimento vê **quantos** contatos cada doação recebeu, não o nome da entidade. | `006`, "Minhas doações" |
 
 ## Como foi verificado

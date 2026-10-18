@@ -3,16 +3,17 @@
 import { db } from '../config/supabaseClient.js';
 
 // contatos(count): quantas entidades tocaram em "Conversar no WhatsApp" (RF-05, regra 6).
-const CAMPOS = 'id, created_at, produto_id, quantidade, prazo_retirada, observacao, status, retirado_em, '
+const CAMPOS = 'id, created_at, produto_id, quantidade, prazo_retirada, observacao, local_retirada, status, retirado_em, '
   + 'produto:produtos (nome, unidade, data_validade), contatos (count)';
 
 export const doacoesRepository = {
-  async publicar({ produto_id, quantidade, prazo_retirada, observacao }) {
+  async publicar({ produto_id, quantidade, prazo_retirada, observacao, local_retirada }) {
     const { data, error } = await db().rpc('publicar_doacao', {
       p_produto_id: produto_id,
       p_quantidade: quantidade,
       p_prazo_retirada: prazo_retirada,
       p_observacao: observacao,
+      p_local_retirada: local_retirada,
     });
     if (error) throw error;
     return data;

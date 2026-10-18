@@ -8,6 +8,7 @@ Passo a passo para a equipe sair do código e ter um link para abrir no celular 
    1. `004_autenticacao_perfis.sql` — perfis, dono dos dados e RLS por dono (as migrações 001 a 003 já estão aplicadas no banco em nuvem).
    2. `005_rf04_doacoes.sql` — doações, publicar/retirar/cancelar e expiração.
    3. `006_rf05_mural_contatos.sql` — mural da entidade e contatos.
+   4. `007_estabelecimento_endereco.sql` — "Meu estabelecimento" e endereço de retirada (spec v1.2). **Depois dela, cada comerciante precisa ter endereço** (ou digitar o local na doação) para publicar: ele mesmo preenche em "Meu estabelecimento", tocando no nome da loja no topo da tela.
 2. **Database > Extensions > `pg_cron`**: ative. Depois rode de novo só o último bloco `DO $$ ... cron.schedule ... $$` da `005`. Confira com `SELECT jobname, schedule FROM cron.job;` (deve aparecer `elo-expirar-doacoes` a cada 15 min).
 3. **Atenção:** depois da `004`, os produtos e vendas antigos (seed e testes da Aula 10) ficam sem dono e **somem das telas**. É o esperado. Se quiser reaproveitá-los numa conta de teste, rode: `UPDATE produtos SET estabelecimento_id = '<id do estabelecimento>' WHERE estabelecimento_id IS NULL;` (e o mesmo em `vendas`).
 

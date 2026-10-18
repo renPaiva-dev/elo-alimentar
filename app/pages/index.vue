@@ -1,7 +1,8 @@
 <script setup>
 // Início do comerciante: contador "Vencem em até 3 dias" (RF-03, regra 5) e estoque (RF-01).
 const api = useApi();
-const { alertasValidade } = useSessao();
+const { alertasValidade, perfil } = useSessao();
+const pendencias = computed(() => pendenciasDoEstabelecimento(perfil.value));
 const produtos = ref([]);
 const carregando = ref(true);
 const erro = ref('');
@@ -39,6 +40,9 @@ onMounted(async () => {
   <div class="tela">
     <h1>Início</h1>
     <p v-if="route.query.cadastrado" class="aviso sucesso" role="status">Produto cadastrado.</p>
+    <NuxtLink v-if="pendencias.length" to="/estabelecimento" class="aviso alerta" style="display: block; text-decoration: none">
+      Complete os dados da loja para as entidades acharem suas doações: falta {{ pendencias.join(', ') }}. <strong>Completar →</strong>
+    </NuxtLink>
 
     <NuxtLink to="/validade" class="cartao item" style="text-decoration: none; color: inherit">
       <div class="item-linha">

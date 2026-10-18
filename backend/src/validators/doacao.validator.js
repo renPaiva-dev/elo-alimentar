@@ -13,7 +13,7 @@ export function validarDoacao(corpo, agora = Date.now()) {
   if (corpo === null || typeof corpo !== 'object' || Array.isArray(corpo)) {
     return { ok: false, erro: 'Envie os dados da doação em JSON.' };
   }
-  const { produto_id: produtoId, quantidade, prazo_retirada: prazo, observacao } = corpo;
+  const { produto_id: produtoId, quantidade, prazo_retirada: prazo, observacao, local_retirada: local } = corpo;
 
   if (!UUID.test(String(produtoId ?? ''))) return { ok: false, erro: 'Produto não encontrado.' };
   if (!(typeof quantidade === 'number' && Number.isFinite(quantidade) && quantidade > 0)) {
@@ -35,6 +35,13 @@ export function validarDoacao(corpo, agora = Date.now()) {
     }
   }
 
+  // Spec v1.2: local de retirada opcional; vazio = endereço do estabelecimento.
+  if (local !== undefined && local !== null && local !== '') {
+    if (typeof local !== 'string' || local.trim().length < 5 || local.trim().length > 150) {
+      return { ok: false, erro: 'O local de retirada deve ter de 5 a 150 caracteres.' };
+    }
+  }
+
   return {
     ok: true,
     doacao: {
@@ -42,6 +49,7 @@ export function validarDoacao(corpo, agora = Date.now()) {
       quantidade,
       prazo_retirada: prazo,
       observacao: observacao?.trim() || null,
+      local_retirada: local?.trim() || null,
     },
   };
 }

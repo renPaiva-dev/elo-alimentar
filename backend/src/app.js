@@ -4,6 +4,7 @@ import { produtosRoutes } from './routes/produtos.routes.js';
 import { vendasRoutes } from './routes/vendas.routes.js';
 import { doacoesRoutes } from './routes/doacoes.routes.js';
 import { contatosRoutes } from './routes/contatos.routes.js';
+import { perfilController } from './controllers/perfil.controller.js';
 import { autenticar, exigirPerfil } from './middlewares/autenticacao.js';
 import { tratarErros } from './middlewares/erros.js';
 
@@ -11,7 +12,8 @@ export const app = express();
 
 app.use(express.json());
 app.use('/api/v1', autenticar);
-app.get('/api/v1/perfil', (req, res) => res.status(200).json(req.perfil));
+app.get('/api/v1/perfil', perfilController.obter);
+app.patch('/api/v1/perfil', exigirPerfil('comerciante'), perfilController.atualizar);
 app.use('/api/v1/produtos', exigirPerfil('comerciante'), produtosRoutes);
 app.use('/api/v1/vendas', exigirPerfil('comerciante'), vendasRoutes);
 app.use('/api/v1/doacoes', doacoesRoutes);

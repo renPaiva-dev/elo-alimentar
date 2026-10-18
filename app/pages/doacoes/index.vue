@@ -78,6 +78,7 @@ async function alterar(doacao, status) {
             <span class="pill">ativo</span>
           </div>
           <div class="item-detalhe">Retirar até {{ dataHoraCurta(d.prazo_retirada) }}</div>
+          <div v-if="d.local_retirada" class="item-detalhe">Local: {{ d.local_retirada }}</div>
           <div v-if="d.observacao" class="item-detalhe">“{{ d.observacao }}”</div>
           <div class="item-detalhe">
             {{ d.contatos === 0 ? 'Nenhuma entidade chamou ainda' : `${d.contatos} ${d.contatos === 1 ? 'entidade chamou' : 'entidades chamaram'} no WhatsApp` }}

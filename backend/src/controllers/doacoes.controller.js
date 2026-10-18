@@ -27,6 +27,9 @@ function paraCardDoMural(l) {
     observacao: l.observacao,
     estabelecimento: l.estabelecimento_nome,
     bairro: l.bairro,
+    // Spec v1.2: onde buscar (local da doação ou, se vazio, endereço da loja).
+    endereco_retirada: l.endereco_retirada ?? null,
+    retirada_na_loja: l.retirada_na_loja ?? true,
     latitude: l.latitude === null ? null : Number(l.latitude),
     longitude: l.longitude === null ? null : Number(l.longitude),
     whatsapp_comercial: l.whatsapp_comercial,

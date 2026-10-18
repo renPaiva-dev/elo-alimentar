@@ -62,7 +62,7 @@ describe('POST /doacoes (RF-04)', () => {
     expect(r.headers.get('location')).toBe(`/api/v1/doacoes/${DOACAO}`);
     expect(r.json.status).toBe('ativo');
     expect(repo.publicar).toHaveBeenCalledWith({
-      produto_id: IOGURTE, quantidade: 6, prazo_retirada: PRAZO_BDD, observacao: null,
+      produto_id: IOGURTE, quantidade: 6, prazo_retirada: PRAZO_BDD, observacao: null, local_retirada: null,
     });
   });
 

@@ -15,8 +15,10 @@
 -- latitude/longitude: no Google Maps, clique com o botão direito no estabelecimento
 -- e copie os números (ex.: -5.0892, -42.8019). São do comércio, não de pessoas.
 -- whatsapp_comercial: 55 + DDD + número, só dígitos (13), autorizado pelo responsável.
-INSERT INTO public.estabelecimentos (user_id, nome_fantasia, bairro, latitude, longitude, whatsapp_comercial)
-SELECT id, '<Nome do estabelecimento>', '<Bairro>', <latitude>, <longitude>, '<55DDDNUMERO>'
+-- endereco, latitude/longitude e WhatsApp podem ficar NULL aqui: depois da migração 007
+-- o próprio comerciante preenche em "Meu estabelecimento" (de preferência, na loja, com o GPS).
+INSERT INTO public.estabelecimentos (user_id, nome_fantasia, bairro, endereco, latitude, longitude, whatsapp_comercial)
+SELECT id, '<Nome do estabelecimento>', '<Bairro>', '<Rua, número — referência>', <latitude>, <longitude>, '<55DDDNUMERO>'
   FROM auth.users
  WHERE email = '<email-do-comerciante>'
 ON CONFLICT (user_id) DO NOTHING;
