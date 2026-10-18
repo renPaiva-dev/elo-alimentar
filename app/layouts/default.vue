@@ -10,7 +10,11 @@ onMounted(atualizarAlertas);
   <div class="app">
     <header class="topo">
       <span class="marca">Elo Alimentar</span>
-      <span v-if="perfil" class="quem">{{ perfil.nome }}<br><small>{{ comerciante ? 'Comerciante' : 'Entidade' }}</small></span>
+      <NuxtLink
+        v-if="comerciante" to="/estabelecimento" class="quem" style="color: inherit; text-decoration: none"
+        aria-label="Meu estabelecimento"
+      >{{ perfil.nome }}<br><small>Meu estabelecimento ›</small></NuxtLink>
+      <span v-else-if="perfil" class="quem">{{ perfil.nome }}<br><small>Entidade</small></span>
       <button v-if="perfil" class="sair" type="button" @click="sair">Sair</button>
     </header>
 

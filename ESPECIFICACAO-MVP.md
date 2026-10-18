@@ -1,6 +1,6 @@
 # ESPECIFICAÇÃO DO MVP 1 — Elo Alimentar
 
-Versão 1.1 · 06/10/2026 · Equipe Elo Alimentar (IFPI Campus Teresina Central, ADS IV)
+Versão 1.2 · 18/10/2026 · Equipe Elo Alimentar (IFPI Campus Teresina Central, ADS IV)
 
 Este documento é o **contrato funcional** do MVP 1. Nenhuma regra aqui pode ser alterada por agente de código sem aprovação da equipe (ver [`AGENTS.md`](AGENTS.md)).
 
@@ -224,14 +224,32 @@ Este documento é o **contrato funcional** do MVP 1. Nenhuma regra aqui pode ser
 
 ---
 
+## Atualização v1.2 — Meu estabelecimento e local de retirada
+
+*Aprovada por Renato de Paiva Belarmino (líder) em 18/10/2026, após o primeiro teste no ar: a entidade via a distância, mas não sabia onde buscar, e o comerciante não conseguia corrigir o próprio WhatsApp.*
+
+**Meu estabelecimento (comerciante).** O comerciante edita nome, bairro, endereço (5 a 150 caracteres), WhatsApp comercial (55 + DDD + 9 dígitos) e a localização da loja, que pode ser capturada pelo GPS do celular estando na loja. A localização é do estabelecimento, nunca de pessoas. O cadastro da conta continua sendo feito pela equipe (autocadastro segue na Lista proibida). API: `PATCH /api/v1/perfil`.
+
+**RF-04 — nova entrada e nova regra.**
+
+| Campo | Tipo e formato | Limites |
+|---|---|---|
+| `local_retirada` | texto | opcional, de 5 a 150 caracteres; vazio = endereço do estabelecimento |
+
+Regra 7: a publicação é bloqueada se não houver `local_retirada` nem endereço do estabelecimento, com o aviso: "Informe o local de retirada ou cadastre o endereço em "Meu estabelecimento"."
+
+**RF-05 — nova saída.** O card mostra "Buscar em: [endereço de retirada]" e o botão "Ver no mapa" (Google Maps: o ponto exato da loja quando a retirada é na loja; a busca pelo endereço digitado quando é em outro local, marcado como "fora da loja"). A distância continua calculada pela localização da loja.
+
+---
+
 ## 2. Modelo de dados inicial
 
 | Tabela | Campos principais | Acesso (Row Level Security) |
 |---|---|---|
-| `estabelecimentos` | `id`, `user_id`, `nome_fantasia`, `bairro`, `latitude`, `longitude`, `whatsapp_comercial` | o próprio comerciante; entidades leem nome, bairro, coordenadas e WhatsApp |
+| `estabelecimentos` | `id`, `user_id`, `nome_fantasia`, `bairro`, `endereco`, `latitude`, `longitude`, `whatsapp_comercial` | o próprio comerciante; entidades leem nome, bairro, coordenadas e WhatsApp |
 | `produtos` | `id`, `estabelecimento_id`, `nome`, `unidade`, `quantidade`, `preco_centavos`, `data_validade`, `criado_em` | só o estabelecimento dono |
 | `vendas` / `itens_venda` | `id`, `estabelecimento_id`, `total_centavos`, `criado_em` / `venda_id`, `produto_id`, `quantidade`, `preco_centavos` | só o estabelecimento dono |
-| `doacoes` | `id`, `produto_id`, `estabelecimento_id`, `quantidade`, `prazo_retirada`, `observacao`, `status`, `criado_em`, `retirado_em` | dono escreve; entidades leem só as `ativo` |
+| `doacoes` | `id`, `produto_id`, `estabelecimento_id`, `quantidade`, `prazo_retirada`, `observacao`, `local_retirada`, `status`, `criado_em`, `retirado_em` | dono escreve; entidades leem só as `ativo` |
 | `entidades` | `id`, `user_id`, `nome`, `bairro` | a própria entidade |
 | `contatos` | `id`, `doacao_id`, `entidade_id`, `criado_em` | a entidade cria; o estabelecimento dono lê |
 

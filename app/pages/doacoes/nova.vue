@@ -14,10 +14,13 @@ const enviando = ref(false);
 const agora = ref(Date.now());
 
 const temWhatsApp = computed(() => /^55\d{11}$/.test(perfil.value?.whatsapp_comercial || ''));
-const whatsappFormatado = computed(() => {
-  const w = perfil.value?.whatsapp_comercial || '';
-  return w.length === 13 ? `(${w.slice(2, 4)}) ${w.slice(4, 9)}-${w.slice(9)}` : '';
-});
+const whatsappFormatado = computed(() => formatarWhatsApp(perfil.value?.whatsapp_comercial));
+
+// Spec v1.2: a entidade precisa saber onde buscar. Padrão: endereço da loja.
+const enderecoDaLoja = computed(() => perfil.value?.endereco || '');
+const outroLocal = ref(false);
+const localRetirada = ref('');
+const precisaDeLocal = computed(() => !enderecoDaLoja.value || outroLocal.value);
 
 // Janela do prazo: de agora + 30 min a agora + 72 h, nunca depois de 23:59 do dia da validade.
 const fimDaValidade = computed(() => (produto.value ? Date.parse(`${produto.value.data_validade}T23:59:00-03:00`) : 0));
@@ -51,6 +54,7 @@ async function publicar() {
       quantidade: Number(String(quantidade.value).replace(',', '.')),
       prazo_retirada: localParaIso(prazoLocal.value),
       observacao: observacao.value.trim() || null,
+      local_retirada: precisaDeLocal.value ? localRetirada.value.trim() || null : null,
     });
     await navigateTo({ path: '/doacoes', query: { publicada: '1' } });
   } catch (e) {
@@ -100,6 +104,25 @@ async function publicar() {
       </div>
 
       <div class="campo">
+        <span style="font-weight: 700; font-size: .92rem">Local de retirada</span>
+        <template v-if="enderecoDaLoja">
+          <span>{{ enderecoDaLoja }}</span>
+          <label style="display: flex; gap: 8px; align-items: center; font-weight: 400">
+            <input v-model="outroLocal" type="checkbox" style="width: 20px; height: 20px; min-height: 0">
+            Retirar em outro local
+          </label>
+        </template>
+        <p v-else class="aviso alerta" style="margin: 0">
+          A loja ainda não tem endereço. Digite onde buscar abaixo ou cadastre em
+          <NuxtLink to="/estabelecimento">Meu estabelecimento</NuxtLink>.
+        </p>
+        <input
+          v-if="precisaDeLocal" id="local" v-model="localRetirada" required minlength="5" maxlength="150"
+          aria-label="Endereço de retirada" placeholder="Rua, número e ponto de referência"
+        >
+      </div>
+
+      <div class="campo">
         <label for="obs">Observação (opcional)</label>
         <textarea id="obs" v-model="observacao" maxlength="200" placeholder="Ex.: retirar na porta lateral" />
         <span class="dica">{{ observacao.length }}/200</span>
@@ -107,7 +130,7 @@ async function publicar() {
 
       <p v-if="temWhatsApp" class="aviso info">As entidades vão chamar no WhatsApp <strong>{{ whatsappFormatado }}</strong>.</p>
       <p v-else class="aviso alerta">
-        Seu estabelecimento ainda não tem WhatsApp comercial cadastrado. Fale com a equipe Elo Alimentar para publicar doações.
+        Cadastre o WhatsApp da loja em <NuxtLink to="/estabelecimento">Meu estabelecimento</NuxtLink> para publicar doações.
       </p>
       <p v-if="semJanela" class="aviso alerta">
         Não dá mais tempo de retirada antes do fim da validade (prazo mínimo de 30 min).

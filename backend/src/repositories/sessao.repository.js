@@ -12,17 +12,22 @@ export const sessaoRepository = {
 
   /**
    * Roda no contexto do usuário: o RLS só deixa cada conta ler o próprio perfil.
-   * @returns {Promise<{tipo:'comerciante'|'entidade', id:string, nome:string, bairro:string, whatsapp_comercial?:string|null}|null>}
+   * @returns {Promise<{tipo:'comerciante'|'entidade', id:string, nome:string, bairro:string,
+   *   endereco?:string|null, whatsapp_comercial?:string|null, latitude?:number|null, longitude?:number|null}|null>}
    */
   async obterPerfil() {
     const estab = await db()
       .from('estabelecimentos')
-      .select('id, nome_fantasia, bairro, whatsapp_comercial')
+      .select('id, nome_fantasia, bairro, endereco, whatsapp_comercial, latitude, longitude')
       .maybeSingle();
     if (estab.error) throw estab.error;
     if (estab.data) {
-      const { id, nome_fantasia: nome, bairro, whatsapp_comercial } = estab.data;
-      return { tipo: 'comerciante', id, nome, bairro, whatsapp_comercial };
+      const { id, nome_fantasia: nome, bairro, endereco, whatsapp_comercial, latitude, longitude } = estab.data;
+      const numero = (v) => (v === null ? null : Number(v));
+      return {
+        tipo: 'comerciante', id, nome, bairro, endereco, whatsapp_comercial,
+        latitude: numero(latitude), longitude: numero(longitude),
+      };
     }
 
     const entidade = await db().from('entidades').select('id, nome, bairro').maybeSingle();

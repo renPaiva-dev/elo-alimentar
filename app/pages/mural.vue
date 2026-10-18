@@ -122,12 +122,19 @@ onMounted(() => {
             <span v-if="c.distancia_km !== undefined" class="pill">{{ formatarKm(c.distancia_km) }}</span>
           </div>
           <div class="item-detalhe">{{ c.estabelecimento }} · {{ c.bairro }}</div>
+          <div v-if="c.endereco_retirada" class="item-detalhe">
+            <strong style="color: var(--texto)">Buscar em:</strong> {{ c.endereco_retirada }}
+            <span v-if="!c.retirada_na_loja" class="pill info" style="margin-left: 4px">fora da loja</span>
+          </div>
           <div class="item-detalhe">Retirar até {{ dataHoraCurta(c.prazo_retirada) }}</div>
           <div v-if="c.observacao" class="item-detalhe">“{{ c.observacao }}”</div>
-          <a
-            class="botao whatsapp bloco" :href="linkWhatsApp(c, perfil?.nome ?? '')" target="_blank" rel="noopener"
-            @click="registrarContato(c)"
-          >Conversar no WhatsApp</a>
+          <div class="botoes">
+            <a v-if="linkMapa(c)" class="botao" :href="linkMapa(c)" target="_blank" rel="noopener" style="flex: 0 0 auto">Ver no mapa</a>
+            <a
+              class="botao whatsapp" :href="linkWhatsApp(c, perfil?.nome ?? '')" target="_blank" rel="noopener"
+              @click="registrarContato(c)"
+            >Conversar no WhatsApp</a>
+          </div>
         </li>
       </ul>
     </template>

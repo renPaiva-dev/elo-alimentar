@@ -128,3 +128,13 @@ Todas as rotas exigem `Authorization: Bearer <JWT>` do Supabase Auth: **401** se
 | 05 | `POST /contatos` `{ "doacao_id" }` | entidade | **201** + `Location` | 400, 404 | ✅ |
 
 **Evidência (18/10/2026):** `npm test` com 81 testes; migrações 001 → 006 em PostgreSQL 17 (PGlite) com 63 cenários de RLS e regras; teste ponta a ponta no navegador com 19 passos. Roteiros manuais no Supabase real: `docs/testes/RF-04.md` e `docs/testes/RF-05.md` (a preencher).
+
+### Atualização — spec v1.2 (18/10/2026): Meu estabelecimento e local de retirada
+
+| Método e URI | Perfil | Sucesso | Erros | Entrega |
+|---|---|---|---|---|
+| `PATCH /perfil` `{ nome?, bairro?, endereco?, whatsapp_comercial?, latitude?, longitude? }` (latitude e longitude juntas; as duas `null` apagam) | comerciante | 200 com o perfil atualizado | 400, 403 | ✅ migração `007` |
+| `POST /doacoes` aceita `local_retirada?` (5 a 150) | comerciante | 201 | 400 sem local e sem endereço da loja | ✅ |
+| `GET /doacoes?status=ativo` devolve `endereco_retirada` e `retirada_na_loja` | entidade | 200 | — | ✅ |
+
+**Evidência:** `npm test` com 100 testes; migrações 001 → 007 em PostgreSQL 17 (PGlite) com 75 cenários; ponta a ponta no navegador com 22 passos (inclui preencher "Meu estabelecimento" com o GPS e conferir "Buscar em" e "Ver no mapa" no mural).
