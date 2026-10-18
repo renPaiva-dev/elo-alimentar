@@ -16,8 +16,16 @@ export function tratarErros(err, req, res, _next) {
     return res.status(400).json({ erro: tecnica ? 'Dados inválidos.' : err.message });
   }
   if (err.code === '23503') {
-    return res.status(409).json({ erro: 'Produto com vendas registradas não pode ser excluído.' });
+    const doacoes = /doacoes/.test(`${err.message || ''} ${err.details || ''}`);
+    return res.status(409).json({
+      erro: doacoes
+        ? 'Produto com doações registradas não pode ser excluído.'
+        : 'Produto com vendas registradas não pode ser excluído.',
+    });
   }
+  // Códigos próprios levantados pelas funções do banco (migração 005).
+  if (err.code === 'EL404') return res.status(404).json({ erro: err.message });
+  if (err.code === 'EL409') return res.status(409).json({ erro: err.message });
   if (err.code === '42501') {
     return res.status(403).json({ erro: 'Operação não permitida pela política de segurança do banco.' });
   }
