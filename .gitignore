@@ -3,3 +3,7 @@
 .env.*.local
 *.env
 node_modules/
+.nuxt/
+.output/
+.vercel/
+dist/

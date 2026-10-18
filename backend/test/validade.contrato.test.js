@@ -31,7 +31,7 @@ let servidor;
 let base;
 
 async function chamar(caminho) {
-  const resp = await fetch(`${base}${caminho}`);
+  const resp = await fetch(`${base}${caminho}`, { headers: { Authorization: 'Bearer token-comerciante' } });
   return { status: resp.status, json: await resp.json() };
 }
 

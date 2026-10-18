@@ -111,3 +111,20 @@ Tabela completa em `docs/testes/CHECKPOINT-AULA-10.md`.
 4. **Deploy da API:** o banco já está na nuvem (Supabase); a API Express ainda roda localmente, e a publicação (Render/Vercel) é o próximo passo.
 
 **Commits:** `1850228` (API, RF-01 e RF-02) · `f9d95b4` (RF-03) · **PRs:** #1 e #3
+
+### Atualização — Autenticação (Aula 11), RF-04 e RF-05
+
+Todas as rotas exigem `Authorization: Bearer <JWT>` do Supabase Auth: **401** sem token ou com token expirado; **403** para conta sem perfil ou perfil errado (ex.: entidade no caixa). O RLS passou a ser por dono (`auth.uid()`), migração `004`.
+
+| RF | Método e URI | Perfil | Sucesso | Erros | Entrega |
+|---|---|---|---|---|---|
+| — | `GET /perfil` | ambos | 200 `{ tipo, id, nome, bairro, whatsapp_comercial? }` | 401, 403 | ✅ (nova — ver `docs/DECISOES-MVP1.md`, item 6) |
+| 01–03 | rotas de `/produtos` e `/vendas` acima | comerciante | iguais | + 401, 403 | ✅ |
+| 04 | `POST /doacoes` `{ produto_id, quantidade, prazo_retirada (ISO com fuso), observacao? }` | comerciante | **201** + `Location` | 400, 409 (20 ativas) | ✅ migração `005` |
+| 04 | `GET /doacoes` ("Minhas doações", com `status` efetivo e total de `contatos`) | comerciante | 200 | — | ✅ |
+| 04 | `GET /doacoes/{id}` | comerciante | 200 | 404 | ✅ (nova — destino do `Location`) |
+| 04 | `PATCH /doacoes/{id}` `{ "status": "retirado" \| "cancelado" }` | comerciante | 200 | 400, 404, 409 | ✅ |
+| 05 | `GET /doacoes?status=ativo[&bairro={bairro}]` (mural) | entidade | 200 | 400 | ✅ migração `006` |
+| 05 | `POST /contatos` `{ "doacao_id" }` | entidade | **201** + `Location` | 400, 404 | ✅ |
+
+**Evidência (18/10/2026):** `npm test` com 81 testes; migrações 001 → 006 em PostgreSQL 17 (PGlite) com 63 cenários de RLS e regras; teste ponta a ponta no navegador com 19 passos. Roteiros manuais no Supabase real: `docs/testes/RF-04.md` e `docs/testes/RF-05.md` (a preencher).

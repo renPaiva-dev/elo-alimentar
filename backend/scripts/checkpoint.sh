@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 # Roteiro do Checkpoint #2 (Aula 10): exercita a API real (Express → Supabase) com os
 # valores dos cenários BDD e imprime uma tabela com o status esperado e o obtido.
-# Pré-requisito: API no ar em outro terminal (npm run api). Não lê nenhuma chave.
-# Uso: bash backend/scripts/checkpoint.sh   (ou API=https://... bash backend/scripts/checkpoint.sh)
+# Pré-requisito: API no ar em outro terminal (npm run api) e o JWT de uma conta comerciante
+# (Aula 11): TOKEN=$(npm run -s token -- email senha). Não lê nenhuma chave.
+# Uso: TOKEN=... bash backend/scripts/checkpoint.sh   (ou API=https://... TOKEN=... bash ...)
 set -u
+: "${TOKEN:?Defina TOKEN com o JWT de uma conta comerciante: TOKEN=\$(npm run -s token -- email senha)}"
 BASE="${API:-http://localhost:3000/api/v1}"
 HOJE=$(TZ=America/Fortaleza date +%F)
 D() { TZ=America/Fortaleza date -d "$HOJE $1 day" +%F; }
@@ -12,7 +14,7 @@ FALHAS=0
 LINHAS=()
 
 req() { # método caminho [corpo] → define ST, BODY, LOC
-  local args=(-s -o "$TMP/b" -D "$TMP/h" -X "$1" -H "Content-Type: application/json")
+  local args=(-s -o "$TMP/b" -D "$TMP/h" -X "$1" -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN")
   [ -n "${3:-}" ] && args+=(--data "$3")
   curl "${args[@]}" "$BASE$2"
   ST=$(awk 'NR==1{print $2}' "$TMP/h")

@@ -67,23 +67,33 @@ Estas ideias **não** serão implementadas na versão 1, mesmo que pareçam fác
 
 ## 5. Stack tecnológica inicial
 
-- **Front-end:** Nuxt 4 (Vue 3), mobile-first, instalável como PWA.
-- **API REST:** Node.js + Express na pasta `backend/` (rotas → controllers → repositories → Supabase).
-- **Back-end e banco:** Supabase (PostgreSQL + Auth + Row Level Security).
-- **Hospedagem:** Vercel (front-end) e Supabase Cloud (plano gratuito).
-- **Testes:** Vitest para regras de negócio e roteiros manuais BDD para as telas.
+- **Front-end:** Nuxt 4 (Vue 3), mobile-first, instalável na tela inicial do celular (pasta `app/`).
+- **API REST:** Node.js + Express na pasta `backend/` (rotas → controllers → repositories → Supabase), servida pelo próprio Nuxt em `/api/v1`.
+- **Autenticação:** Supabase Auth (e-mail e senha, contas criadas pela equipe); a API exige `Authorization: Bearer <JWT>`.
+- **Back-end e banco:** Supabase (PostgreSQL + Auth + Row Level Security por dono; `pg_cron` para expirar doações).
+- **Hospedagem:** Vercel (telas + API no mesmo link) e Supabase Cloud (planos gratuitos).
+- **Testes:** Vitest (contrato da API e regras do mural) e roteiros manuais BDD em `docs/testes/`.
+
+| RF | Situação |
+|---|---|
+| RF-01, RF-02, RF-03 | ✅ API + telas (Início, Cadastrar/Editar produto, Caixa, Validade) |
+| RF-04 (RF-CORE) | ✅ API + telas (Publicar doação, Minhas doações) — migração 005 |
+| RF-05 | ✅ API + tela (Mural da entidade com GPS ou bairro e WhatsApp) — migração 006 |
 
 ## 6. Como rodar localmente
 
 ```bash
-git clone https://github.com/SEU-USUARIO/elo-alimentar.git
+git clone https://github.com/renPaiva-dev/elo-alimentar.git
 cd elo-alimentar
 cp .env.example .env.local   # preencha com as chaves do seu projeto Supabase
 npm install
-npm run smoke   # testa o cadastro de produto (RF-01) no Supabase
-npm test        # testes de contrato da API (Vitest)
-npm run api     # sobe a API em http://localhost:3000/api/v1
+npm test        # 81 testes (Vitest), sem rede
+npm run dev     # telas + API em http://localhost:3000 (API em /api/v1)
+npm run api     # só a API Express em http://localhost:3000/api/v1
+npm run -s token -- email senha   # JWT para testar a API com curl
 ```
+
+Para aplicar as migrações, cadastrar contas e publicar no Vercel, siga [`docs/COLOCAR-NO-AR.md`](docs/COLOCAR-NO-AR.md). Pontos da implementação que aguardam aprovação da equipe: [`docs/DECISOES-MVP1.md`](docs/DECISOES-MVP1.md).
 
 ## 7. Equipe
 
