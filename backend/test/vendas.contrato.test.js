@@ -18,7 +18,7 @@ let base;
 async function chamar(metodo, caminho, corpo) {
   const resp = await fetch(`${base}${caminho}`, {
     method: metodo,
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer token-comerciante' },
     body: corpo === undefined ? undefined : JSON.stringify(corpo),
   });
   const texto = await resp.text();

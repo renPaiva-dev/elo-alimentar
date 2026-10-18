@@ -12,8 +12,8 @@ function lerEnv(...nomes) {
 }
 
 // 1. Carregamento defensivo (Vite, Next.js, Nuxt e Node)
-const supabaseUrl = lerEnv('VITE_SUPABASE_URL', 'NEXT_PUBLIC_SUPABASE_URL', 'NUXT_PUBLIC_SUPABASE_URL', 'SUPABASE_URL');
-const supabaseAnonKey = lerEnv('VITE_SUPABASE_ANON_KEY', 'NEXT_PUBLIC_SUPABASE_ANON_KEY', 'NUXT_PUBLIC_SUPABASE_ANON_KEY', 'SUPABASE_ANON_KEY');
+export const supabaseUrl = lerEnv('VITE_SUPABASE_URL', 'NEXT_PUBLIC_SUPABASE_URL', 'NUXT_PUBLIC_SUPABASE_URL', 'SUPABASE_URL');
+export const supabaseAnonKey = lerEnv('VITE_SUPABASE_ANON_KEY', 'NEXT_PUBLIC_SUPABASE_ANON_KEY', 'NUXT_PUBLIC_SUPABASE_ANON_KEY', 'SUPABASE_ANON_KEY');
 
 // 2. Validação precoce: falha com mensagem clara em vez de erro silencioso
 if (!supabaseUrl || !supabaseAnonKey) {
